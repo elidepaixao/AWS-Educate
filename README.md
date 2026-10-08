@@ -96,4 +96,55 @@ Para compartilhar os arquivos carregados, é necessário editar as permissões d
 5. Volte nos arquivos anexados, clique neles, copie a URL e cole no navegador: *o arquivo estará disponível publicamente!*
 
 ---
-*Anotações feitas durante meus estudos práticos na AWS.* 🚀
+---
+
+## 💻 Laboratório: Demonstração do Amazon EC2
+
+**Iniciar uma Instância EC2:**
+Uma instância é um servidor virtual na nuvem AWS. O objetivo deste laboratório é configurar uma instância de servidor Linux.
+
+### 1. Acessando o EC2 e Escolhendo a Imagem (AMI)
+No console da AWS, digite `EC2` e siga os passos:
+1. Vá no **EC2 Dashboard** -> clique em **Launch instance**.
+2. **Name and tags:** Escolha um nome para a sua instância e clique em `Add additional tags` se necessário.
+3. **Application and OS Images (AMI):** Selecione **Amazon Linux** (AWS).
+4. Certifique-se de que a opção **Free tier eligible** (elegível para o nível gratuito) esteja selecionada.
+
+### 2. Tipo de Instância e Par de Chaves (Key Pair)
+1. **Instance type:** Escolha `t2.micro` (Free tier eligible). 
+   * *Nota: É o tipo de instância que define a memória, CPU, armazenamento e capacidade de rede.* Deixe a máquina virtual de hardware padrão (HVM).
+2. **Key pair (login):** Clique em **Create new key pair**.
+3. **Key pair name:** Escolha um nome (pode ser o mesmo nome do EC2).
+4. **Key pair type:** `RSA`
+5. **Private key file format:** `.pem` (OpenSSH).
+6. Clique em **Create key pair**.
+   * ⚠️ *O arquivo de chave privada é baixado automaticamente no navegador. Salve em um local seguro! O EC2 armazena a chave pública na instância e você armazena a chave privada.*
+
+### 3. Configurações de Rede (Network Settings)
+Uma VPC padrão é criada em cada região. Uma Nuvem Privada Virtual (VPC) permite definir uma rede virtual.
+1. Em **Network settings**, clique em **Edit**.
+2. **VPC - required info:** Selecione sua própria VPC, que estará na lista para definir onde a instância EC2 será executada.
+3. **Subnet:** Selecione a sub-rede desejada.
+4. **Auto-assign public IP:** O campo de IP público não é ativado automaticamente. Altere para **Enable** (Ativar), já que a instância será executada em um servidor web público.
+
+### 4. Firewall e Security Groups
+1. Selecione **Create security group**.
+2. Altere o nome para o nome da instância utilizada e preencha a **Description - required** (nomeie).
+3. **Regras de SSH:** 
+   * A opção padrão é `Allow SSH traffic from -> Anywhere`. Vamos mudar a origem de acesso SSH para **My IP**. Apenas este endereço IP terá acesso pela porta 22.
+4. **Regras de HTTP/HTTPS:**
+   * Marque a caixa ☑️ **Allow HTTPS traffic from the internet**.
+   * Marque a caixa ☑️ **Allow HTTP traffic from the internet**.
+   * *Configuração manual:* `Security group rule` -> `Add Security Group` -> Type: `HTTP` -> Source type: `Anywhere`.
+
+### 5. Configurar o Armazenamento (Storage)
+1. Configure o volume raiz (Root volume) como: `1x [ 10 ] GiB [ gp2 ]`.
+2. Se necessário, você pode clicar em `Add new volume`.
+
+### 6. Lançamento da Instância
+1. Revise tudo no painel **Summary** (à direita).
+2. Clique no botão **Launch instance**.
+3. Clique em **View all instances**.
+4. Acompanhe o **Instance state**: para estar pronta para uso, o status deve mudar para `"Running"`.
+
+---
